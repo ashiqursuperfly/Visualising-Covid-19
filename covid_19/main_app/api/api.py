@@ -3,7 +3,7 @@ import datetime
 from ..models import *
 # import regression as reg
 
-
+LIMIT_COUNTRIES=10
 class ApiInfo:
 
     def create_session():
@@ -28,13 +28,14 @@ class ApiInfo:
 
     class AffectedCountryList:
         ENDPOINT="https://coronavirus-monitor.p.rapidapi.com/coronavirus/affected.php"
+        PARAM_LIST_OF_COUNTRY="affected_countries"
 
 def getAffectedCountries():
 
     s = ApiInfo.create_session()
     response = s.get(ApiInfo.AffectedCountryList.ENDPOINT)
 
-    countries = list(dict(response.json())["affected_countries"])
+    countries = list(dict(response.json())[ApiInfo.AffectedCountryList.PARAM_LIST_OF_COUNTRY])[:10]
 
     for c in countries:
         _ = Country(country_name=c)
@@ -50,37 +51,25 @@ def getHistoryByCountry(country_name: str):
     country_obj = Country.getCountry(country_name)
 
     records = list(dict(response.json())[ApiInfo.HistoryByCountry.PARAM_STAT_BY_COUNTRY])
-
-    data=dict()
     for record in records:
-        data_record = Covid19Data(country=country_obj)
+        data_record = TotalCasesData(country=country_obj)
         date_time_str = record[ApiInfo.HistoryByCountry.PARAM_RECORD_DATE]
         date_time_obj = datetime.datetime.strptime(date_time_str[:10], '%Y-%m-%d')
 
         try:
             data_record.total_cases = record[ApiInfo.HistoryByCountry.PARAM_TOTAL_CASES]
-            data_record.total_deaths = record[ApiInfo.HistoryByCountry.PARAM_TOTAL_DEATHS]
-            data_record.total_recovered = record[ApiInfo.HistoryByCountry.PARAM_TOTAL_RECOVERED]
-            data_record.total_critical = record[ApiInfo.HistoryByCountry.PARAM_TOTAL_CRITICAL]
+            # data_record.total_deaths = record[ApiInfo.HistoryByCountry.PARAM_TOTAL_DEATHS]
+            # data_record.total_recovered = record[ApiInfo.HistoryByCountry.PARAM_TOTAL_RECOVERED]
+            # data_record.total_critical = record[ApiInfo.HistoryByCountry.PARAM_TOTAL_CRITICAL]
             data_record.record_date = date_time_obj
             data_record.save()
-            print(saved, data_record)
+            print("saved", data_record)
         except:
             continue
 
+def getHistoryOfAllCountries():
+    countries = Country.objects.all()
+    for c in countries:
+        getHistoryByCountry(c.country_name)
 
 
-
-
-
-# reg.regressionNumpy(x,y,3, "xy")
-# reg.regressionScikit(x,y,"xy")
-
-# countries=getAffectedCountries()
-# for c in countries[:20]:
-#     (x,y)=getHistoryByCountry(c)
-#     reg.regressionNumpy(x,y,2,c)
-
-
-# (x,y)=getHistoryByCountry("Italy")
-# reg.regressionNumpy(x,y,3, "Italy")

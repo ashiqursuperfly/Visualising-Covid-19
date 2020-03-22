@@ -36,28 +36,92 @@ class Country(models.Model):
     class Meta:
         verbose_name_plural = "Countries"
 
-
-class Covid19Data(models.Model):
+class TotalCasesData(models.Model):
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
     record_date = models.DateField()
     total_cases = models.PositiveIntegerField()
-    total_deaths = models.PositiveIntegerField()
-    total_critical = models.PositiveIntegerField()
-    total_recovered = models.PositiveIntegerField()
 
     def save(self, *args, **kwargs):
         try:
-            d = Covid19Data.objects.get(country=self.country, record_date=self.record_date)
+            d = TotalCasesData.objects.get(country=self.country, record_date=self.record_date)
         except:
             d = None
 
         if d is None:
-            return super(Covid19Data, self).save(*args, **kwargs)
+            return super(TotalCasesData, self).save(*args, **kwargs)
         else:
             d.delete()
-            return super(Covid19Data, self).save(*args, **kwargs)
+            return super(TotalCasesData, self).save(*args, **kwargs)
 
     class Meta:
-        verbose_name_plural = "Covid19Data"
+        verbose_name_plural = "Infected"
+
+
+
+class TotalDeathsData(models.Model):
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
+    record_date = models.DateField()
+    total_deaths = models.PositiveIntegerField()
+
+    def save(self, *args, **kwargs):
+        try:
+            d = TotalDeathsData.objects.get(country=self.country, record_date=self.record_date)
+        except:
+            d = None
+
+        if d is None:
+            return super(TotalDeathsData, self).save(*args, **kwargs)
+        else:
+            d.delete()
+            return super(TotalDeathsData, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name_plural = "Deaths"
+
+
+
+class TotalRecoveredData(models.Model):
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
+    record_date = models.DateField()
+    total_recovered = models.PositiveIntegerField()
+
+    def save(self, *args, **kwargs):
+        try:
+            d = TotalRecoveredData.objects.get(country=self.country, record_date=self.record_date)
+        except:
+            d = None
+
+        if d is None:
+            return super(TotalRecoveredData, self).save(*args, **kwargs)
+        else:
+            d.delete()
+            return super(TotalRecoveredData, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name_plural = "Recoveries"
+
+
+
+
+class TotalCriticalData(models.Model):
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
+    record_date = models.DateField()
+    total_critical = models.PositiveIntegerField()
+
+    def save(self, *args, **kwargs):
+        try:
+            d = TotalCriticalData.objects.get(country=self.country, record_date=self.record_date)
+        except:
+            d = None
+
+        if d is None:
+            return super(TotalCriticalData, self).save(*args, **kwargs)
+        else:
+            d.delete()
+            return super(TotalCriticalData, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name_plural = "CriticalCases"
+
 
 
