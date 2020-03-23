@@ -49,8 +49,8 @@ def regressionNumpy(x ,y ,degree :int, filename: str, pointColor="midnightblue",
     # plt.gcf().autofmt_xdate()
 
 
-    fig.tight_layout()
-    print(filename)
+    # fig.tight_layout()
+    # print(filename)
     plt.savefig(filename)
     plt.close()
 

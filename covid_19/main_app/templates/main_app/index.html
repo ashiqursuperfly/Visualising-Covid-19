@@ -20,20 +20,19 @@
 
 <div class="container gallery-container">
 
-    <h1>Bootstrap 3 Gallery</h1>
+    <h1>Covid 19 Projections</h1>
 
-    <p class="page-description text-center">Grid Layout With Zoom Effect</p>
+    <p class="page-description text-center">Updated Every 10 Minutes</p>
 
-    {% comment %} {% static 'Home/images/me.jpg' %} {% endcomment %}
     <div class="tz-gallery">
         {% if data %}
             {% for key, value in data.items %}
-                <h2>{{ key }}</h2>
+                <h1>{{ key }}</h1>
 
                 <div class="row">
                     {% for graph in value %}
                         <div class="col-sm-6 col-md-4">
-                            <a class="lightbox" href="../images/traffic.jpg">
+                            <a class="lightbox" href="{% static 'main_app/images/' %}{{graph}}">
                                 <img src="{% static 'main_app/images/' %}{{graph}}" alt="Traffic">
                             </a>
                         </div>

@@ -3,7 +3,7 @@ import datetime
 from ..models import *
 # import regression as reg
 
-LIMIT_COUNTRIES=2
+LIMIT_COUNTRIES=5
 class ApiInfo:
 
     def create_session():
@@ -60,36 +60,45 @@ def getHistoryByCountry(country_name: str):
         date_time_str = record[ApiInfo.HistoryByCountry.PARAM_RECORD_DATE]
         date_time_obj = datetime.datetime.strptime(date_time_str[:10], '%Y-%m-%d')
 
+        try:
+            _1 = int(str(record[ApiInfo.HistoryByCountry.PARAM_TOTAL_CASES]).replace(",",""))
+            if _1 is not None and len(str(_1).strip())>0:
+                data_record_1.record_date = date_time_obj
+                data_record_1.total_cases = _1
+                data_record_1.save()
+                print("saved1", data_record_1)
+        except:
+            print("ignored1")
 
-        _1 = int(str(record[ApiInfo.HistoryByCountry.PARAM_TOTAL_CASES]).replace(",",""))
-        _2 = int(str(record[ApiInfo.HistoryByCountry.PARAM_TOTAL_DEATHS]).replace(",",""))
-        _3 = int(str(record[ApiInfo.HistoryByCountry.PARAM_TOTAL_RECOVERED]).replace(",",""))
-        _4 = int(str(record[ApiInfo.HistoryByCountry.PARAM_TOTAL_CRITICAL]).replace(",",""))
+        try:
+            _2 = int(str(record[ApiInfo.HistoryByCountry.PARAM_TOTAL_DEATHS]).replace(",",""))
+            if _2 is not None and len(str(_2).strip())>0:
+                data_record_2.record_date = date_time_obj
+                data_record_2.total_deaths = _2
+                data_record_2.save()
+                print("saved2", data_record_2)
+        except:
+            print("ignored2")
 
-        if _1 is not None:
-            data_record_1.record_date = date_time_obj
-            data_record_1.total_cases = _1
-            data_record_1.save()
-            print("saved1", data_record_1)
+        try:
+            _3 = int(str(record[ApiInfo.HistoryByCountry.PARAM_TOTAL_RECOVERED]).replace(",",""))
+            if _3 is not None and len(str(_3).strip())>0:
+                data_record_3.record_date = date_time_obj
+                data_record_3.total_recovered = _3
+                data_record_3.save()
+                print("saved3", data_record_3)
+        except:
+            print("ignored3")
 
-        if _2 is not None:
-            data_record_2.record_date = date_time_obj
-            data_record_2.total_deaths = _2
-            data_record_2.save()
-            print("saved2", data_record_2)
-
-        if _3 is not None:
-            data_record_3.record_date = date_time_obj
-            data_record_3.total_recovered = _3
-            data_record_3.save()
-            print("saved3", data_record_3)
-
-        if _4 is not None:
-            data_record_4.record_date = date_time_obj
-            data_record_4.total_critical = _4
-            data_record_4.save()
-            print("saved4", data_record_4)
-
+        try:
+            _4 = int(str(record[ApiInfo.HistoryByCountry.PARAM_TOTAL_CRITICAL]).replace(",",""))
+            if _4 is not None and len(str(_4).strip())>0:
+                data_record_4.record_date = date_time_obj
+                data_record_4.total_critical = _4
+                data_record_4.save()
+                print("saved4", data_record_4)
+        except:
+            print("ignored4")
 
 def getHistoryOfAllCountries():
     countries = Country.objects.all()
@@ -98,5 +107,6 @@ def getHistoryOfAllCountries():
 
 
 def populate_db():
+    print("INFO: not fetching countries from API. fetching only from database")
     getAffectedCountries()
     getHistoryOfAllCountries()

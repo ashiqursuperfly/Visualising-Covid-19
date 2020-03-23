@@ -1,8 +1,6 @@
 from django.db import models
 import requests
 
-country_code_api="https://restcountries.eu/rest/v2/name/{NAME}"
-country_flag_api="https://www.countryflags.io/{CODE}/flat/64.png"
 
 class Country(models.Model):
     country_name = models.CharField(max_length=255)
