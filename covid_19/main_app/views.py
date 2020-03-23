@@ -7,10 +7,10 @@ import time
 # Create your views here.
 
 class GraphFile:
-    TOTAL_CASES="_TOTAL_CASES"
-    TOTAL_CRITICAL="_TOTAL_CRITICAL"
-    TOTAL_DEATHS="_TOTAL_DEATHS"
-    TOTAL_RECOVERED="_TOTAL_RECOVERED"
+    TOTAL_CASES="_TOTAL_CASES.png"
+    TOTAL_CRITICAL="_TOTAL_CRITICAL.png"
+    TOTAL_DEATHS="_TOTAL_DEATHS.png"
+    TOTAL_RECOVERED="_TOTAL_RECOVERED.png"
     graph_image_store_path="main_app/static/main_app/images"
 
 
@@ -29,7 +29,7 @@ def update_charts(request):
         for item in total:
             x.append(int(time.mktime(item.record_date.timetuple())))
             y.append(item.total_cases)
-            file_name = os.path.join(os.path.abspath(GraphFile.graph_image_store_path),c.country_name+GraphFile.TOTAL_CASES+".png")
+            file_name = os.path.join(os.path.abspath(GraphFile.graph_image_store_path),c.country_name+GraphFile.TOTAL_CASES)
             regressionNumpy(x,y,3,file_name,lineColor="peru", pointColor="sienna", ylabel="Total Infected")
 
         total=TotalDeathsData.objects.filter(country=c)
@@ -38,7 +38,7 @@ def update_charts(request):
         for item in total:
             x.append(int(time.mktime(item.record_date.timetuple())))
             y.append(item.total_deaths)
-            file_name = os.path.join(os.path.abspath(GraphFile.graph_image_store_path),c.country_name+GraphFile.TOTAL_DEATHS+".png")
+            file_name = os.path.join(os.path.abspath(GraphFile.graph_image_store_path),c.country_name+GraphFile.TOTAL_DEATHS)
             regressionNumpy(x,y,3,file_name,lineColor="tomato", pointColor="tab:red", ylabel="Total Deaths")
 
         total=TotalRecoveredData.objects.filter(country=c)
@@ -47,7 +47,7 @@ def update_charts(request):
         for item in total:
             x.append(int(time.mktime(item.record_date.timetuple())))
             y.append(item.total_recovered)
-            file_name = os.path.join(os.path.abspath(GraphFile.graph_image_store_path),c.country_name+GraphFile.TOTAL_RECOVERED+".png")
+            file_name = os.path.join(os.path.abspath(GraphFile.graph_image_store_path),c.country_name+GraphFile.TOTAL_RECOVERED)
             regressionNumpy(x,y,3,file_name,lineColor="lightgreen", pointColor="tab:green", ylabel="Total Recovered")
 
         total=TotalCriticalData.objects.filter(country=c)
@@ -56,7 +56,7 @@ def update_charts(request):
         for item in total:
             x.append(int(time.mktime(item.record_date.timetuple())))
             y.append(item.total_critical)
-            file_name = os.path.join(os.path.abspath(GraphFile.graph_image_store_path),c.country_name+GraphFile.TOTAL_CRITICAL+".png")
+            file_name = os.path.join(os.path.abspath(GraphFile.graph_image_store_path),c.country_name+GraphFile.TOTAL_CRITICAL)
             regressionNumpy(x,y,3,file_name,lineColor="plum", pointColor="rebeccapurple", ylabel="Total Critical")
 
 
@@ -75,4 +75,4 @@ def home(request):
         graphs.append(c.country_name+GraphFile.TOTAL_RECOVERED)
         data[c.country_name] = graphs
 
-    return render(request,"main_app/index.html", context=data)
+    return render(request,"main_app/index.html", context={"data":data})
