@@ -3,7 +3,7 @@ import datetime
 from ..models import *
 # import regression as reg
 
-LIMIT_COUNTRIES=1
+LIMIT_COUNTRIES=2
 class ApiInfo:
 
     def create_session():

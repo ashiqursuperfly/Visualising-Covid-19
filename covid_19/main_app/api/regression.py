@@ -3,21 +3,40 @@ import os
 from datetime import datetime
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+import math
 
 graph_image_store_path="graphs"
 
-def regressionNumpy(x ,y ,degree :int, filename: str, pointColor="blue", lineColor="black", bgColor="white",xlabel="DATE",ylabel="Y"):
+def regressionNumpy(x ,y ,degree :int, filename: str, pointColor="midnightblue", lineColor="black", bgColor="whitesmoke",xlabel="DATE",ylabel="Y"):
 
-    # plt.rcParams['axes.facecolor'] = bgColor
+    plt.rcParams['axes.facecolor'] = bgColor
+    plt.rcParams['savefig.facecolor'] = bgColor
+    plt.rcParams['xtick.color']=pointColor
+    plt.rcParams['ytick.color']=pointColor
+    plt.rcParams['xtick.labelsize']=10
+    plt.rcParams['ytick.labelsize']=10
+
+
+    print(plt.rcParams)
+
     fig = plt.figure()
     ax = fig.add_subplot(111, label="1")
+
+    for axis in ['top','bottom','left','right']:
+        ax.spines[axis].set_linewidth(3)
+    ax.spines['right'].set_color(bgColor)
+    ax.spines['top'].set_color(bgColor)
+    ax.spines['left'].set_color("lightgray")
+    ax.spines['bottom'].set_color("lightgray")
+
+
     ax2 = fig.add_subplot(111, label="2", frame_on=False)
 
     mymodel = numpy.poly1d(numpy.polyfit(x, y, degree))
     myline = numpy.linspace(min(x),max(x),len(x)*500)
-    ax.plot(myline, mymodel(myline), color=lineColor)
+    ax.plot(myline, mymodel(myline), color=lineColor, linewidth=6)
     ax.xaxis.set_visible(False)
-    ax.set_ylabel(ylabel, fontsize=10)
+    ax.set_ylabel(ylabel, fontsize=10, color=pointColor)
 
     dates=list()
     for val in x:
@@ -25,10 +44,10 @@ def regressionNumpy(x ,y ,degree :int, filename: str, pointColor="blue", lineCol
         dates.append(date_obj)
 
     ax2.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
-    ax2.xaxis.set_major_locator(mdates.DayLocator(interval=int(len(dates)/4)))
+    ax2.xaxis.set_major_locator(mdates.DayLocator(interval=int(math.ceil(len(dates)/4))))
     # ax2.set_xlabel(xlabel, fontsize=10)
 
-    ax2.scatter(dates, y, color=pointColor)
+    ax2.scatter(dates, y, color=pointColor, linewidth=10)
     ax2.yaxis.set_visible(False)
     # plt.gcf().autofmt_xdate()
 
