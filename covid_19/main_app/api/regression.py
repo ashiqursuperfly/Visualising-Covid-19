@@ -7,7 +7,7 @@ import math
 
 graph_image_store_path="graphs"
 
-def regressionNumpy(x ,y ,degree :int, filename: str, pointColor="midnightblue", lineColor="black", bgColor="whitesmoke",xlabel="DATE",ylabel="Y"):
+def regressionNumpy(x ,y ,degree :int, filename: str, pointColor="midnightblue", lineColor="black", bgColor="honeydew",xlabel="DATE",ylabel="Y"):
 
     plt.rcParams['axes.facecolor'] = bgColor
     plt.rcParams['savefig.facecolor'] = bgColor
@@ -16,8 +16,7 @@ def regressionNumpy(x ,y ,degree :int, filename: str, pointColor="midnightblue",
     plt.rcParams['xtick.labelsize']=10
     plt.rcParams['ytick.labelsize']=10
 
-
-    print(plt.rcParams)
+    # print(plt.rcParams)
 
     fig = plt.figure()
     ax = fig.add_subplot(111, label="1")
