@@ -53,10 +53,11 @@ class TotalCasesData(models.Model):
             d.delete()
             return super(TotalCasesData, self).save(*args, **kwargs)
 
+    def __str__(self):
+        return self.country.country_name + ":" + str(self.total_cases)
+
     class Meta:
-        verbose_name_plural = "Infected"
-
-
+        verbose_name_plural = "TotalCases"
 
 class TotalDeathsData(models.Model):
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
@@ -75,10 +76,10 @@ class TotalDeathsData(models.Model):
             d.delete()
             return super(TotalDeathsData, self).save(*args, **kwargs)
 
+    def __str__(self):
+        return self.country.country_name + ":" + str(self.total_deaths)
     class Meta:
         verbose_name_plural = "Deaths"
-
-
 
 class TotalRecoveredData(models.Model):
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
@@ -97,11 +98,11 @@ class TotalRecoveredData(models.Model):
             d.delete()
             return super(TotalRecoveredData, self).save(*args, **kwargs)
 
+    def __str__(self):
+        return self.country.country_name + ":" + str(self.total_recovered)
+
     class Meta:
         verbose_name_plural = "Recoveries"
-
-
-
 
 class TotalCriticalData(models.Model):
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
@@ -120,6 +121,8 @@ class TotalCriticalData(models.Model):
             d.delete()
             return super(TotalCriticalData, self).save(*args, **kwargs)
 
+    def __str__(self):
+        return self.country.country_name + ":" + str(self.total_critical)
     class Meta:
         verbose_name_plural = "CriticalCases"
 

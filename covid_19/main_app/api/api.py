@@ -3,7 +3,7 @@ import datetime
 from ..models import *
 # import regression as reg
 
-LIMIT_COUNTRIES=10
+LIMIT_COUNTRIES=1
 class ApiInfo:
 
     def create_session():
@@ -35,7 +35,7 @@ def getAffectedCountries():
     s = ApiInfo.create_session()
     response = s.get(ApiInfo.AffectedCountryList.ENDPOINT)
 
-    countries = list(dict(response.json())[ApiInfo.AffectedCountryList.PARAM_LIST_OF_COUNTRY])[:10]
+    countries = list(dict(response.json())[ApiInfo.AffectedCountryList.PARAM_LIST_OF_COUNTRY])[:LIMIT_COUNTRIES]
 
     for c in countries:
         _ = Country(country_name=c)
@@ -51,21 +51,45 @@ def getHistoryByCountry(country_name: str):
     country_obj = Country.getCountry(country_name)
 
     records = list(dict(response.json())[ApiInfo.HistoryByCountry.PARAM_STAT_BY_COUNTRY])
+
     for record in records:
-        data_record = TotalCasesData(country=country_obj)
+        data_record_1 = TotalCasesData(country=country_obj)
+        data_record_2 = TotalDeathsData(country=country_obj)
+        data_record_3 = TotalRecoveredData(country=country_obj)
+        data_record_4 = TotalCriticalData(country=country_obj)
         date_time_str = record[ApiInfo.HistoryByCountry.PARAM_RECORD_DATE]
         date_time_obj = datetime.datetime.strptime(date_time_str[:10], '%Y-%m-%d')
 
-        try:
-            data_record.total_cases = record[ApiInfo.HistoryByCountry.PARAM_TOTAL_CASES]
-            # data_record.total_deaths = record[ApiInfo.HistoryByCountry.PARAM_TOTAL_DEATHS]
-            # data_record.total_recovered = record[ApiInfo.HistoryByCountry.PARAM_TOTAL_RECOVERED]
-            # data_record.total_critical = record[ApiInfo.HistoryByCountry.PARAM_TOTAL_CRITICAL]
-            data_record.record_date = date_time_obj
-            data_record.save()
-            print("saved", data_record)
-        except:
-            continue
+
+        _1 = int(str(record[ApiInfo.HistoryByCountry.PARAM_TOTAL_CASES]).replace(",",""))
+        _2 = int(str(record[ApiInfo.HistoryByCountry.PARAM_TOTAL_DEATHS]).replace(",",""))
+        _3 = int(str(record[ApiInfo.HistoryByCountry.PARAM_TOTAL_RECOVERED]).replace(",",""))
+        _4 = int(str(record[ApiInfo.HistoryByCountry.PARAM_TOTAL_CRITICAL]).replace(",",""))
+
+        if _1 is not None:
+            data_record_1.record_date = date_time_obj
+            data_record_1.total_cases = _1
+            data_record_1.save()
+            print("saved1", data_record_1)
+
+        if _2 is not None:
+            data_record_2.record_date = date_time_obj
+            data_record_2.total_deaths = _2
+            data_record_2.save()
+            print("saved2", data_record_2)
+
+        if _3 is not None:
+            data_record_3.record_date = date_time_obj
+            data_record_3.total_recovered = _3
+            data_record_3.save()
+            print("saved3", data_record_3)
+
+        if _4 is not None:
+            data_record_4.record_date = date_time_obj
+            data_record_4.total_critical = _4
+            data_record_4.save()
+            print("saved4", data_record_4)
+
 
 def getHistoryOfAllCountries():
     countries = Country.objects.all()
@@ -73,3 +97,6 @@ def getHistoryOfAllCountries():
         getHistoryByCountry(c.country_name)
 
 
+def populate_db():
+    getAffectedCountries()
+    getHistoryOfAllCountries()
