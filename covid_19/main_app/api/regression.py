@@ -1,11 +1,9 @@
 import numpy
-import os
 from datetime import datetime
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import math
 
-graph_image_store_path="graphs"
 
 def regressionNumpy(x ,y ,degree :int, filename: str, pointColor="midnightblue", lineColor="black", bgColor="honeydew",xlabel="DATE",ylabel="Y"):
 
@@ -52,9 +50,8 @@ def regressionNumpy(x ,y ,degree :int, filename: str, pointColor="midnightblue",
 
 
     fig.tight_layout()
-    file_name = os.path.join(os.path.abspath(graph_image_store_path),filename+"_numpy"+".png")
-    print(file_name)
-    plt.savefig(file_name)
+    print(filename)
+    plt.savefig(filename)
     plt.close()
 
     return mymodel
