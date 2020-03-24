@@ -835,12 +835,45 @@ ignored-total-critical with error:invalid literal for int() with base 10: '' BAN
 ignored-total-critical with error:invalid literal for int() with base 10: '' BANGLADESH
 ignored-total-critical with error:invalid literal for int() with base 10: '' BANGLADESH
 ignored-total-critical with error:invalid literal for int() with base 10: '' BANGLADESH
+ignored-total-critical with error:invalid literal for int() with base 10: '' BANGLADESH
+ignored-total-critical with error:invalid literal for int() with base 10: '' BANGLADESH
+ignored-total-critical with error:invalid literal for int() with base 10: '' BANGLADESH
+ignored-total-critical with error:invalid literal for int() with base 10: '' BANGLADESH
+ignored-total-critical with error:invalid literal for int() with base 10: '' BANGLADESH
+ignored-total-critical with error:invalid literal for int() with base 10: '' BANGLADESH
+ignored-total-critical with error:invalid literal for int() with base 10: '' BANGLADESH
+ignored-total-critical with error:invalid literal for int() with base 10: '' BANGLADESH
+ignored-total-critical with error:invalid literal for int() with base 10: '' BANGLADESH
+ignored-total-critical with error:invalid literal for int() with base 10: '' BANGLADESH
+ignored-total-critical with error:invalid literal for int() with base 10: '' BANGLADESH
+ignored-total-critical with error:invalid literal for int() with base 10: '' BANGLADESH
+ignored-total-critical with error:invalid literal for int() with base 10: '' BANGLADESH
+ignored-total-critical with error:invalid literal for int() with base 10: '' BANGLADESH
+ignored-total-critical with error:invalid literal for int() with base 10: '' BANGLADESH
+ignored-total-critical with error:invalid literal for int() with base 10: '' BANGLADESH
+ignored-total-critical with error:invalid literal for int() with base 10: '' BANGLADESH
 Reading Data:CHINA
 Reading Data:ITALY
 Reading Data:USA
 Reading Data:SPAIN
 Reading Data:GERMANY
 Reading Data:IRAN
+ignored-total-critical with error:invalid literal for int() with base 10: '' IRAN
+ignored-total-critical with error:invalid literal for int() with base 10: '' IRAN
+ignored-total-critical with error:invalid literal for int() with base 10: '' IRAN
+ignored-total-critical with error:invalid literal for int() with base 10: '' IRAN
+ignored-total-critical with error:invalid literal for int() with base 10: '' IRAN
+ignored-total-critical with error:invalid literal for int() with base 10: '' IRAN
+ignored-total-critical with error:invalid literal for int() with base 10: '' IRAN
+ignored-total-critical with error:invalid literal for int() with base 10: '' IRAN
+ignored-total-critical with error:invalid literal for int() with base 10: '' IRAN
+ignored-total-critical with error:invalid literal for int() with base 10: '' IRAN
+ignored-total-critical with error:invalid literal for int() with base 10: '' IRAN
+ignored-total-critical with error:invalid literal for int() with base 10: '' IRAN
+ignored-total-critical with error:invalid literal for int() with base 10: '' IRAN
+ignored-total-critical with error:invalid literal for int() with base 10: '' IRAN
+ignored-total-critical with error:invalid literal for int() with base 10: '' IRAN
+ignored-total-critical with error:invalid literal for int() with base 10: '' IRAN
 ignored-total-critical with error:invalid literal for int() with base 10: '' IRAN
 ignored-total-critical with error:invalid literal for int() with base 10: '' IRAN
 ignored-total-critical with error:invalid literal for int() with base 10: '' IRAN

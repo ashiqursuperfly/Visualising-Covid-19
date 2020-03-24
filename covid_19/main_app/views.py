@@ -4,8 +4,10 @@ from .api.api import *
 from .api.regression import *
 from django.http import HttpResponse
 import time
-# Create your views here.
+import shutil
+import os
 
+# Create your views here.
 class GraphFile:
     POLYNOMIAL_DEGREE_THRESHOLD = 20
     MINIMUM_NUMBER_OF_DATAPOINTS = 5
@@ -17,8 +19,10 @@ class GraphFile:
     TOTAL_CRITICAL="_TOTAL_CRITICAL.png"
     TOTAL_DEATHS="_TOTAL_DEATHS.png"
     TOTAL_RECOVERED="_TOTAL_RECOVERED.png"
-    NOT_ENOUGH_DATA_IMAGE="A_not_enough_data.png"
-    graph_image_store_path="main_app/static/main_app/images"
+    latest_path="graphs_latest/"
+    stable_path="graphs_stable/"
+    graph_image_store_path="main_app/static/main_app/images/"+latest_path
+    graph_image_load_path="main_app/static/main_app/images/"+stable_path
 
 def run_db_scripts(request):
     populate_db(GraphFile.LIMIT_COUNTRIES, GraphFile.shouldFetchCountries)
@@ -86,7 +90,8 @@ def update_charts(request):
 
     return HttpResponse("Done")
 
-def home(request):
+def view_latest_charts(request):
+    prefix = GraphFile.latest_path
     countries = Country.objects.all()
 
     data = dict()
@@ -98,22 +103,64 @@ def home(request):
 
         count = TotalCasesData.objects.filter(country=c).count()
         if count >= GraphFile.MINIMUM_NUMBER_OF_DATAPOINTS:
-            graphs.append(c.country_name+GraphFile.TOTAL_CASES)
+            graphs.append(prefix + c.country_name+GraphFile.TOTAL_CASES)
+
+        count = TotalCriticalData.objects.filter(country=c).count()
+        if count >= GraphFile.MINIMUM_NUMBER_OF_DATAPOINTS:
+            graphs.append(prefix + c.country_name+GraphFile.TOTAL_CRITICAL)
+
+        count = TotalDeathsData.objects.filter(country=c).count()
+        if count >= GraphFile.MINIMUM_NUMBER_OF_DATAPOINTS:
+            graphs.append(prefix + c.country_name+GraphFile.TOTAL_DEATHS)
+
+        count = TotalRecoveredData.objects.filter(country=c).count()
+        if count >= GraphFile.MINIMUM_NUMBER_OF_DATAPOINTS:
+            graphs.append(prefix + c.country_name+GraphFile.TOTAL_RECOVERED)
+
+        data[c.country_name] = (country_flag,graphs)
+
+    return render(request,"main_app/index.html", context={"data":data})
+
+def move_latest_chart_to_stable(request):
+    source = os.path.join(os.path.abspath(GraphFile.graph_image_store_path))+"/"
+    dest1 = os.path.join(os.path.abspath(GraphFile.graph_image_load_path))+"/"
+
+    files = os.listdir(source)
+
+    for f in files:
+        shutil.move(source+f, dest1+f)
+
+    return HttpResponse("Done")
+
+def home(request):
+    prefix = GraphFile.stable_path
+    countries = Country.objects.all()
+
+    data = dict()
+
+    for c in countries:
+
+        country_flag = get_country_flag(c.country_name)
+        graphs = list()
+
+        count = TotalCasesData.objects.filter(country=c).count()
+        if count >= GraphFile.MINIMUM_NUMBER_OF_DATAPOINTS:
+            graphs.append(prefix + c.country_name+GraphFile.TOTAL_CASES)
         #else: graphs.append(GraphFile.NOT_ENOUGH_DATA_IMAGE)
 
         count = TotalCriticalData.objects.filter(country=c).count()
         if count >= GraphFile.MINIMUM_NUMBER_OF_DATAPOINTS:
-            graphs.append(c.country_name+GraphFile.TOTAL_CRITICAL)
+            graphs.append(prefix + c.country_name+GraphFile.TOTAL_CRITICAL)
         #else: graphs.append(GraphFile.NOT_ENOUGH_DATA_IMAGE)
 
         count = TotalDeathsData.objects.filter(country=c).count()
         if count >= GraphFile.MINIMUM_NUMBER_OF_DATAPOINTS:
-            graphs.append(c.country_name+GraphFile.TOTAL_DEATHS)
+            graphs.append(prefix + c.country_name+GraphFile.TOTAL_DEATHS)
         #else: graphs.append(GraphFile.NOT_ENOUGH_DATA_IMAGE)
 
         count = TotalRecoveredData.objects.filter(country=c).count()
         if count >= GraphFile.MINIMUM_NUMBER_OF_DATAPOINTS:
-            graphs.append(c.country_name+GraphFile.TOTAL_RECOVERED)
+            graphs.append(prefix + c.country_name+GraphFile.TOTAL_RECOVERED)
         #else: graphs.append(GraphFile.NOT_ENOUGH_DATA_IMAGE)
 
         data[c.country_name] = (country_flag,graphs)

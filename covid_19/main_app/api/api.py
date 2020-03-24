@@ -3,7 +3,6 @@ import datetime
 from ..models import *
 from ..logger import *
 
-
 class ApiInfo:
 
     country_code_api="https://restcountries.eu/rest/v2/name/{NAME}" #?fullText=true"
@@ -119,12 +118,12 @@ def getHistoryOfAllCountries():
         log("Reading Data:"+c.country_name)
         getHistoryByCountry(c.country_name)
 
-def populate_db(limit: int, shouldLoadCountries = True):
-    # print("INFO: not fetching countries from API. fetching only from database")
-    clear_log()
-    if shouldLoadCountries:
-        getAffectedCountries(limit)
+# def populate_db(limit: int, shouldLoadCountries = True):
+#     # print("INFO: not fetching countries from API. fetching only from database")
+#     clear_log()
+#     if shouldLoadCountries:
+#         getAffectedCountries(limit)
 
-    getHistoryOfAllCountries()
+#     getHistoryOfAllCountries()
 
 
