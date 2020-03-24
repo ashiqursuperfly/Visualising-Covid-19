@@ -6,21 +6,22 @@ from django.http import HttpResponse
 import time
 # Create your views here.
 
-country_code_api="https://restcountries.eu/rest/v2/name/{NAME}"
-country_flag_api="https://www.countryflags.io/{CODE}/flat/64.png"
-
 class GraphFile:
     POLYNOMIAL_DEGREE_THRESHOLD = 20
-    MINIMUM_NUMBER_OF_DATAPOINTS = 7
+    MINIMUM_NUMBER_OF_DATAPOINTS = 5
+
+    shouldFetchCountries=True
+    LIMIT_COUNTRIES=10
+
     TOTAL_CASES="_TOTAL_CASES.png"
     TOTAL_CRITICAL="_TOTAL_CRITICAL.png"
     TOTAL_DEATHS="_TOTAL_DEATHS.png"
     TOTAL_RECOVERED="_TOTAL_RECOVERED.png"
-    NOT_ENOUGH_DATA_IMAGE="not_enough_data.png"
+    NOT_ENOUGH_DATA_IMAGE="A_not_enough_data.png"
     graph_image_store_path="main_app/static/main_app/images"
 
 def run_db_scripts(request):
-    populate_db()
+    populate_db(GraphFile.LIMIT_COUNTRIES, GraphFile.shouldFetchCountries)
     return HttpResponse("Done")
 
 def update_charts(request):
@@ -92,28 +93,29 @@ def home(request):
 
     for c in countries:
 
+        country_flag = get_country_flag(c.country_name)
         graphs = list()
 
         count = TotalCasesData.objects.filter(country=c).count()
         if count >= GraphFile.MINIMUM_NUMBER_OF_DATAPOINTS:
             graphs.append(c.country_name+GraphFile.TOTAL_CASES)
-        else: graphs.append(GraphFile.NOT_ENOUGH_DATA_IMAGE)
+        #else: graphs.append(GraphFile.NOT_ENOUGH_DATA_IMAGE)
 
         count = TotalCriticalData.objects.filter(country=c).count()
         if count >= GraphFile.MINIMUM_NUMBER_OF_DATAPOINTS:
             graphs.append(c.country_name+GraphFile.TOTAL_CRITICAL)
-        else: graphs.append(GraphFile.NOT_ENOUGH_DATA_IMAGE)
+        #else: graphs.append(GraphFile.NOT_ENOUGH_DATA_IMAGE)
 
         count = TotalDeathsData.objects.filter(country=c).count()
         if count >= GraphFile.MINIMUM_NUMBER_OF_DATAPOINTS:
             graphs.append(c.country_name+GraphFile.TOTAL_DEATHS)
-        else: graphs.append(GraphFile.NOT_ENOUGH_DATA_IMAGE)
+        #else: graphs.append(GraphFile.NOT_ENOUGH_DATA_IMAGE)
 
         count = TotalRecoveredData.objects.filter(country=c).count()
         if count >= GraphFile.MINIMUM_NUMBER_OF_DATAPOINTS:
             graphs.append(c.country_name+GraphFile.TOTAL_RECOVERED)
-        else: graphs.append(GraphFile.NOT_ENOUGH_DATA_IMAGE)
+        #else: graphs.append(GraphFile.NOT_ENOUGH_DATA_IMAGE)
 
-        data[c.country_name] = graphs
+        data[c.country_name] = (country_flag,graphs)
 
     return render(request,"main_app/index.html", context={"data":data})

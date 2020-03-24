@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import math
 
-
 def regressionNumpy(x ,y ,degree :int, filename: str, pointColor="midnightblue", lineColor="black", bgColor="honeydew",xlabel="DATE",ylabel="Y"):
 
     plt.rcParams['axes.facecolor'] = bgColor
@@ -55,7 +54,6 @@ def regressionNumpy(x ,y ,degree :int, filename: str, pointColor="midnightblue",
     plt.close()
 
     return mymodel
-
 
 from sklearn.linear_model import LinearRegression
 

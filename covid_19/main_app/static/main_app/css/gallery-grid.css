@@ -1,12 +1,13 @@
 body {
-    background-image: linear-gradient(to top, #ecedee 0%, #eceeef 75%, #e7e8e9 100%);
+    /* background-image: linear-gradient(to top, #ecedee 0%, #eceeef 75%, #e7e8e9 100%); */
+    background-color: gainsboro;
     min-height: 100vh;
     font: normal 16px sans-serif;
     padding: 60px 0;
 }
 
 .container.gallery-container {
-    background-color: honeydew;
+    background-color: whitesmoke;
     color: #35373a;
     min-height: 100vh;
     border-radius: 20px;

@@ -27,10 +27,9 @@
     <div class="tz-gallery">
         {% if data %}
             {% for key, value in data.items %}
-                <h1>{{ key }}</h1>
-
+                <h1>{{ key }} <img src="{{ value.0 }}"></h1>
                 <div class="row">
-                    {% for graph in value %}
+                    {% for graph in value.1 %}
                         <div class="col-sm-6 col-md-4">
                             <a class="lightbox" href="{% static 'main_app/images/' %}{{graph}}">
                                 <img src="{% static 'main_app/images/' %}{{graph}}" alt="Traffic">

@@ -1,10 +1,13 @@
 import requests
 import datetime
 from ..models import *
-# import regression as reg
+from ..logger import *
 
-LIMIT_COUNTRIES=5
+
 class ApiInfo:
+
+    country_code_api="https://restcountries.eu/rest/v2/name/{NAME}" #?fullText=true"
+    country_flag_api="https://www.countryflags.io/{CODE}/flat/64.png"
 
     def create_session():
         s = requests.Session()
@@ -30,12 +33,22 @@ class ApiInfo:
         ENDPOINT="https://coronavirus-monitor.p.rapidapi.com/coronavirus/affected.php"
         PARAM_LIST_OF_COUNTRY="affected_countries"
 
-def getAffectedCountries():
+def get_country_flag(name: str):
+    s = requests.Session()
+    response=s.get(ApiInfo.country_code_api.replace("{NAME}",name))
+    # print(response)
+    if response.status_code == 200:
+        country_code=dict(list(response.json())[0])["alpha2Code"]
+        print(country_code)
+        return ApiInfo.country_flag_api.replace("{CODE}",country_code)
+    else: return ""
+
+def getAffectedCountries(limit: int):
 
     s = ApiInfo.create_session()
     response = s.get(ApiInfo.AffectedCountryList.ENDPOINT)
 
-    countries = list(dict(response.json())[ApiInfo.AffectedCountryList.PARAM_LIST_OF_COUNTRY])[:LIMIT_COUNTRIES]
+    countries = list(dict(response.json())[ApiInfo.AffectedCountryList.PARAM_LIST_OF_COUNTRY])[:limit]
 
     for c in countries:
         _ = Country(country_name=c)
@@ -66,9 +79,9 @@ def getHistoryByCountry(country_name: str):
                 data_record_1.record_date = date_time_obj
                 data_record_1.total_cases = _1
                 data_record_1.save()
-                print("saved1", data_record_1)
-        except:
-            print("ignored1")
+                #print("saved1", data_record_1)
+        except Exception as e:
+            log("ignored-total-cases with error:" + str(e) +" "+ country_obj.country_name)
 
         try:
             _2 = int(str(record[ApiInfo.HistoryByCountry.PARAM_TOTAL_DEATHS]).replace(",",""))
@@ -76,9 +89,9 @@ def getHistoryByCountry(country_name: str):
                 data_record_2.record_date = date_time_obj
                 data_record_2.total_deaths = _2
                 data_record_2.save()
-                print("saved2", data_record_2)
-        except:
-            print("ignored2")
+                #print("saved2", data_record_2)
+        except Exception as e:
+            log("ignored-total-deaths with error:" + str(e) +" "+ country_obj.country_name)
 
         try:
             _3 = int(str(record[ApiInfo.HistoryByCountry.PARAM_TOTAL_RECOVERED]).replace(",",""))
@@ -86,9 +99,9 @@ def getHistoryByCountry(country_name: str):
                 data_record_3.record_date = date_time_obj
                 data_record_3.total_recovered = _3
                 data_record_3.save()
-                print("saved3", data_record_3)
-        except:
-            print("ignored3")
+                #print("saved3", data_record_3)
+        except Exception as e:
+            log("ignored-total-recovered with error:" + str(e) +" "+ country_obj.country_name)
 
         try:
             _4 = int(str(record[ApiInfo.HistoryByCountry.PARAM_TOTAL_CRITICAL]).replace(",",""))
@@ -96,17 +109,22 @@ def getHistoryByCountry(country_name: str):
                 data_record_4.record_date = date_time_obj
                 data_record_4.total_critical = _4
                 data_record_4.save()
-                print("saved4", data_record_4)
-        except:
-            print("ignored4")
+                #print("saved4", data_record_4)
+        except Exception as e:
+            log("ignored-total-critical with error:" + str(e) +" "+ country_obj.country_name)
 
 def getHistoryOfAllCountries():
     countries = Country.objects.all()
     for c in countries:
+        log("Reading Data:"+c.country_name)
         getHistoryByCountry(c.country_name)
 
+def populate_db(limit: int, shouldLoadCountries = True):
+    # print("INFO: not fetching countries from API. fetching only from database")
+    clear_log()
+    if shouldLoadCountries:
+        getAffectedCountries(limit)
 
-def populate_db():
-    print("INFO: not fetching countries from API. fetching only from database")
-    getAffectedCountries()
     getHistoryOfAllCountries()
+
+
