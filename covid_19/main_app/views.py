@@ -10,8 +10,8 @@ class GraphFile:
     POLYNOMIAL_DEGREE_THRESHOLD = 20
     MINIMUM_NUMBER_OF_DATAPOINTS = 5
 
-    shouldFetchCountries=True
-    LIMIT_COUNTRIES=10
+    shouldFetchCountries=False
+    LIMIT_COUNTRIES=5
 
     TOTAL_CASES="_TOTAL_CASES.png"
     TOTAL_CRITICAL="_TOTAL_CRITICAL.png"

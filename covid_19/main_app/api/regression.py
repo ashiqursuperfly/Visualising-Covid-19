@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import math
 
-def regressionNumpy(x ,y ,degree :int, filename: str, pointColor="midnightblue", lineColor="black", bgColor="honeydew",xlabel="DATE",ylabel="Y"):
+def regressionNumpy(x ,y ,degree :int, filename: str, pointColor="midnightblue", lineColor="black", bgColor="azure",xlabel="DATE",ylabel="Y"):
 
     plt.rcParams['axes.facecolor'] = bgColor
     plt.rcParams['savefig.facecolor'] = bgColor

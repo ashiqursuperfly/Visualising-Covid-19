@@ -39,7 +39,7 @@ def get_country_flag(name: str):
     # print(response)
     if response.status_code == 200:
         country_code=dict(list(response.json())[0])["alpha2Code"]
-        print(country_code)
+        # print(country_code)
         return ApiInfo.country_flag_api.replace("{CODE}",country_code)
     else: return ""
 

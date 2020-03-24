@@ -123,5 +123,6 @@ class TotalCriticalData(models.Model):
     class Meta:
         verbose_name_plural = "CriticalCases"
 
-
-
+# class PredictedTotalCases(models.Model):
+#     country=models.ForeignKey(Country, on_delete=models.CASCADE)
+#     predicted
