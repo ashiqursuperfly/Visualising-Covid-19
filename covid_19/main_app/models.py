@@ -3,6 +3,8 @@ import requests
 
 class Country(models.Model):
     country_name = models.CharField(max_length=255)
+    continent_id=models.PositiveIntegerField(help_text="EUROPE-1,NORTH-AMERICA-2,ASIA-3,SOUTH-AMERICA-4", default=1)
+    code=models.CharField(max_length=3, default="XX")
 
     def getCountry(country: str):
         try:
@@ -40,7 +42,7 @@ class TotalCasesData(models.Model):
 
     def save(self, *args, **kwargs):
         try:
-            d = TotalCasesData.objects.get(country=self.country, record_date=self.record_date)
+            d = TotalCasesData.objects.filter(country=self.country, record_date=self.record_date)
         except:
             d = None
 
@@ -63,7 +65,7 @@ class TotalDeathsData(models.Model):
 
     def save(self, *args, **kwargs):
         try:
-            d = TotalDeathsData.objects.get(country=self.country, record_date=self.record_date)
+            d = TotalDeathsData.objects.filter(country=self.country, record_date=self.record_date)
         except:
             d = None
 
@@ -85,7 +87,7 @@ class TotalRecoveredData(models.Model):
 
     def save(self, *args, **kwargs):
         try:
-            d = TotalRecoveredData.objects.get(country=self.country, record_date=self.record_date)
+            d = TotalRecoveredData.objects.filter(country=self.country, record_date=self.record_date)
         except:
             d = None
 
@@ -108,7 +110,7 @@ class TotalCriticalData(models.Model):
 
     def save(self, *args, **kwargs):
         try:
-            d = TotalCriticalData.objects.get(country=self.country, record_date=self.record_date)
+            d = TotalCriticalData.objects.filter(country=self.country, record_date=self.record_date)
         except:
             d = None
 
@@ -123,6 +125,26 @@ class TotalCriticalData(models.Model):
     class Meta:
         verbose_name_plural = "CriticalCases"
 
-# class PredictedTotalCases(models.Model):
-#     country=models.ForeignKey(Country, on_delete=models.CASCADE)
-#     predicted
+class EstimatedTotalCasesData(models.Model):
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
+    estimated_date = models.DateField()
+    estimated_total_cases = models.PositiveIntegerField()
+    estimated_new_cases = models.PositiveIntegerField()
+
+    def save(self, *args, **kwargs):
+        try:
+            d = EstimatedTotalCasesData.objects.filter(country=self.country, estimated_date=self.estimated_date)
+        except:
+            d = None
+
+        if d is None:
+            return super(EstimatedTotalCasesData, self).save(*args, **kwargs)
+        else:
+            d.delete()
+            return super(EstimatedTotalCasesData, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.country.country_name + ":" + str(self.estimated_total_cases)
+
+    class Meta:
+        verbose_name_plural = "EstimatedTotalCases"

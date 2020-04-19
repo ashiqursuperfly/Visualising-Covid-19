@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Covid 19 Data Visualizations</title>
+    <title>V i s u a l i s i n g  COVID19</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet">
@@ -20,16 +20,23 @@
 
 <div class="container gallery-container">
 
-    <h1>Covid 19 Projections</h1>
+    <h1>V i s u a l i s i n g<br><br>C O V I D 1 9<img src="{% static 'main_app/images/virus_icon.png'%}"></h1>
 
-    <p class="page-description text-center">Updated Every 10 Minutes</p>
+    {% comment %} <p class="page-description text-center"></p> {% endcomment %}
 
     <div class="tz-gallery">
         {% if data %}
             {% for key, value in data.items %}
-                <h1>{{ key }} <img src="{{ value.0 }}"></h1>
+                <h2>{{ key }} <img src="{{ value.0 }}"></h2>
                 <div class="row">
-                    {% for graph in value.1 %}
+                    <div class="col-sm-6 col-md-4">
+                    {% comment %} PIE {% endcomment %}
+                    <a class="lightbox" href="{% static 'main_app/images/' %}{{value.1}}">
+                        <img src="{% static 'main_app/images/' %}{{value.1}}">
+                    </a>
+                    </div>
+                    {% comment %} OTHERS {% endcomment %}
+                    {% for graph in value.2 %}
                         <div class="col-sm-6 col-md-4">
                             <a class="lightbox" href="{% static 'main_app/images/' %}{{graph}}">
                                 <img src="{% static 'main_app/images/' %}{{graph}}" alt="Traffic">
@@ -44,7 +51,7 @@
         {% endif %}
 
     </div>
-
+    <h6><a href="http://ashiqur-rahman-buet16.herokuapp.com">contact the developer</a></h6>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.8.1/baguetteBox.min.js"></script>
