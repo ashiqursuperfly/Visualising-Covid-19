@@ -8,6 +8,40 @@ import shutil
 import os
 
 def run():
+    update_country_wise_charts()
+    update_combined_charts()
+
+class PieSlice:
+
+    def __init__(self, label, size, legend_label,color):
+      self.label = label
+      self.size = size
+      self.legend_label = legend_label
+      self.color = color
+
+    def __str__(self):
+        return str(self.size)
+
+def recordEstimatedTotalCase(target_country,predictor_model,last_data,confidence):
+    print("Latest:", last_data, last_data.record_date)
+    today = last_data.record_date
+    tomorrow = today + datetime.timedelta(1.25)
+    predicted = predictor_model(int(time.mktime(tomorrow.timetuple())))
+    #
+    predicted_new_cases = int((predicted - last_data.total_cases)*abs(confidence))
+
+    if predicted_new_cases < 0:
+        predicted_new_cases = 0
+
+    print(target_country,"Predicted:",predicted,'New',predicted_new_cases,"New Date",tomorrow)
+
+
+    data = EstimatedTotalCasesData(country=target_country,estimated_date=tomorrow,estimated_total_cases=predicted,estimated_new_cases=predicted_new_cases)
+    data.save()
+
+    return predicted_new_cases
+
+def update_country_wise_charts():
 
     countries = Country.objects.all()
 
@@ -136,33 +170,40 @@ def run():
 
         create_pie(legends=legends,labels= labels,sizes= sizes,colors=colors,explode=explode,filename=pie_chart_file_name)
     print("Done")
-class PieSlice:
-
-    def __init__(self, label, size, legend_label,color):
-      self.label = label
-      self.size = size
-      self.legend_label = legend_label
-      self.color = color
-
-    def __str__(self):
-        return str(self.size)
-
-def recordEstimatedTotalCase(target_country,predictor_model,last_data,confidence):
-    print("Latest:", last_data, last_data.record_date)
-    today = last_data.record_date
-    tomorrow = today + datetime.timedelta(1.25)
-    predicted = predictor_model(int(time.mktime(tomorrow.timetuple())))
-    #
-    predicted_new_cases = int((predicted - last_data.total_cases)*abs(confidence))
-
-    if predicted_new_cases < 0:
-        predicted_new_cases = 0
-
-    print(target_country,"Predicted:",predicted,'New',predicted_new_cases,"New Date",tomorrow)
 
 
-    data = EstimatedTotalCasesData(country=target_country,estimated_date=tomorrow,estimated_total_cases=predicted,estimated_new_cases=predicted_new_cases)
-    data.save()
+'''
+Combined Charts....
+'''
+def update_combined_charts():
+    update_heatmap()
 
-    return predicted_new_cases
+def update_heatmap():
+    countries = Country.objects.all()
+    DAY_OFFSET = int(TotalCasesData.objects.count()*0.08 / len(countries))
+    print("Total Countries:", len(countries), "OFFSET", DAY_OFFSET)
+    heatmap_data = list()
+    for c in countries:
+        total=TotalCasesData.objects.filter(country=c).order_by("record_date")
+        for i in range(0,len(total)-DAY_OFFSET,DAY_OFFSET):
+            new_cases = total[i+DAY_OFFSET].total_cases - total[i].total_cases
+
+            if new_cases < 0 or new_cases is None:
+                print("E.R.R.O.R.\n!!!!!!!!!!!!!!!!!!!!!!!!ERROR: NEGATIVE new_cases SHOULD BE IMPOSSIBLE!!!!!!!!!!!!!!!!!!!!!!!!!")
+                print(total[i+DAY_OFFSET],total[i+DAY_OFFSET].record_date,total[i],total[i].record_date)
+                continue
+
+            csv_row = [str(c.country_name),str(total[i+DAY_OFFSET].record_date), int(new_cases)]
+            heatmap_data.append(csv_row)
+
+    file_name=os.path.join(os.path.abspath(GraphFile.combined_store_path), "new_cases_heatmap"+".png")
+    create_heatmap(file_name, heatmap_data,title="New Cases Heatmap")
+
+def write_csv(rows:list):
+    import csv
+    with open('main_app/api/new_cases_heatmap.csv', mode='w') as employee_file:
+        employee_writer = csv.writer(employee_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+
+        for row in rows:
+            employee_writer.writerow(row)
 

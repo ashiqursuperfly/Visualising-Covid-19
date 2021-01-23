@@ -68,7 +68,7 @@ def getHistoryByCountry(country_name: str):
         date_time_str = record[ApiInfo.HistoryByCountry.PARAM_RECORD_DATE]
         date_time_obj = datetime.datetime.strptime(date_time_str[:10], '%Y-%m-%d')
 
-        if isDateNear(date_time_obj) == False:
+        if isDateNear(country_obj,date_time_obj) == False:
             continue
 
         try:
@@ -113,6 +113,7 @@ def getHistoryByCountry(country_name: str):
 
 def getHistoryOfAllCountries():
     countries = Country.objects.all()
+    print("Total Countries:",countries)
     for c in countries:
         log("Reading Data:"+c.country_name)
         getHistoryByCountry(c.country_name)
@@ -125,9 +126,13 @@ def populate_db(limit: int, shouldLoadCountries = True):
 
     getHistoryOfAllCountries()
 
-def isDateNear(record_date):
+def isDateNear(country_obj,record_date):
 
-    OFFSET = 90
+    _ = len(TotalCasesData.objects.filter(country=country_obj))
+
+    if _ < 10:
+        OFFSET = 90
+    else: OFFSET = 3
 
     today = datetime.datetime.now()
     _ = (today + datetime.timedelta(OFFSET)).timetuple()

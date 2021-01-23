@@ -3,9 +3,11 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import math
+import seaborn as sns
+import pandas as pd
 
 LINE_WIDTH = 15
-POINT_WIDTH = 700
+POINT_WIDTH = 400
 
 def regressionNumpy(x ,y ,predictedX,predictedY,filename: str,title="",pointColor="midnightblue", lineColor="#222222", bgColor="black",xlabel="DATE",ylabel="Y"):
 
@@ -77,7 +79,6 @@ def generate_model(x,y,degree):
 
     return (r_squared,myline,yhat,mymodel)
 
-
 def create_pie(legends: list, labels : list,sizes :list,colors: list,explode,filename: str):
 
     print("Sizes",sizes)
@@ -97,15 +98,6 @@ def create_pie(legends: list, labels : list,sizes :list,colors: list,explode,fil
     for color,text in zip(colors,leg.get_texts()):
         text.set_color(color)
 
-    # i=0
-    # for t in texts:
-    #     if i % 2 == 0:
-    #         print("LABEL DISTANCE")
-    #         t.labeldistance = 1.5
-    #     else:
-    #         t.labeldistance = 3
-    #     i = i + 1
-
     #draw circle
     centre_circle = plt.Circle((0,0),0.6,fc='black')
     fig = plt.gcf()
@@ -116,15 +108,32 @@ def create_pie(legends: list, labels : list,sizes :list,colors: list,explode,fil
     plt.savefig(filename)
     plt.close()
 
-# from sklearn.linear_model import LinearRegression
+def create_heatmap(filename: str, values: list,title="", xlabel = "Date", ylabel="Country",value_label="New Deaths",textColor="#fff766", bgColor="black"):
 
-# def regressionScikit(x ,y , filename: str):
-#     x = numpy.array(x).reshape(-1, 1)  # values converts it into a numpy array
-#     y = numpy.array(y).reshape(-1, 1)  # -1 means that calculate the dimension of rows, but have 1 column
-#     linear_regressor = LinearRegression()  # create object for the class
-#     linear_regressor.fit(x, y)  # perform linear regression
-#     Y_pred = linear_regressor.predict(x)  # make predictions
+    df = pd.DataFrame(values, columns = [ylabel, xlabel, value_label])
+    df = df.pivot(ylabel, xlabel, value_label)
 
-#     plt.scatter(x, y)
-#     plt.plot(x, Y_pred, color='red')
-#     plt.savefig(filename+"_scikit"+".png")
+
+    print(df)
+    df = df.fillna(0)
+
+    print(df)
+
+    plt.rcParams['figure.figsize'] = 25, 15
+    plt.rcParams['axes.facecolor'] = bgColor
+    plt.rcParams['savefig.facecolor'] = bgColor
+    plt.rcParams['xtick.color']=textColor
+    plt.rcParams['ytick.color']=textColor
+    plt.rcParams['xtick.labelsize']=15
+    plt.rcParams['ytick.labelsize']=15
+    plt.rcParams["font.family"] = "sans-serif"
+    #sns.set()
+
+    sns_plot = sns.heatmap(data=df,annot=False, cmap="hot")
+    sns_plot.tick_params(axis='x', rotation=45)
+    sns_plot.set_title(title, color=textColor, fontsize=24)
+
+    fig = sns_plot.get_figure()
+    fig.savefig(filename)
+    plt.close()
+

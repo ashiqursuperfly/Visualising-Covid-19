@@ -50,6 +50,25 @@
                 <p>No results are available.</p>
         {% endif %}
 
+        {% if data2 %}
+            {% for key, value in data2.items %}
+                <h2>{{value.0 }}</h2><br>
+                <div class="row">
+                    {% comment %} OTHERS {% endcomment %}
+                    {% for graph in value.1 %}
+                        <div class="my_large_img">
+                            <a href="{% static 'main_app/images/' %}{{graph}}">
+                                <img src="{% static 'main_app/images/' %}{{graph}}" alt="Traffic" height="500" width="750"><br>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+        {% else %}
+               
+        {% endif %}
+
     </div>
     <h6><a href="http://ashiqur-rahman-buet16.herokuapp.com">contact the developer</a></h6>
 </div>
